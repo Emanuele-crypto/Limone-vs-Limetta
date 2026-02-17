@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GC-MS: Limone vs Limetta</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --y:#D4A800;--yd:#8A6200;--yl:#F5E080;
+  --g:#3DB828;--gd:#1E6010;--gl:#90E860;
+  --bg:#080C12;--b2:#10161F;--b3:#182030;
+  --tx:#D8E4F0;--tm:#6A7E94;--td:#3A4E62;
+  --br:#1E2C3C;--br2:#101828;
+  --bl:#3A8FD0;--pp:#8B6FD8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx)}
+.wrap{max-width:1020px;margin:0 auto;padding:48px 20px 80px}
+header{text-align:center;margin-bottom:56px}
+.over{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--td);margin-bottom:16px}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;line-height:1.06;margin-bottom:8px}
+.ty{color:var(--y)}.tg{color:var(--g)}.tv{color:var(--td);font-style:italic;font-weight:400}
+.sub{font-family:'DM Mono',monospace;font-size:11.5px;color:var(--tm);letter-spacing:.08em;margin-bottom:14px}
+.hdesc{font-size:13px;color:var(--tm);max-width:520px;margin:0 auto;line-height:1.7}
+.leg{display:flex;justify-content:center;gap:24px;margin:32px 0 48px;flex-wrap:wrap}
+.leg-i{display:flex;align-items:center;gap:8px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--tm)}
+.leg-p{width:26px;height:7px;border-radius:3px}
+.sec{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--td);margin-bottom:14px}
+.card{background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:32px;margin-bottom:22px}
+.ct{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;margin-bottom:5px}
+.cd{font-size:12.5px;color:var(--tm);margin-bottom:24px;line-height:1.62}
+svg text{dominant-baseline:middle}
+
+/* compound cards */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.cc{background:var(--b3);border:1px solid var(--br);border-radius:12px;overflow:hidden}
+.cc-top{padding:14px 16px 12px;border-bottom:1px solid var(--br2);display:flex;gap:11px;align-items:flex-start}
+.cico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.cico.y{background:rgba(212,168,0,.13)}.cico.g{background:rgba(61,184,40,.13)}.cico.b{background:rgba(58,143,208,.13)}
+.cfn{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;line-height:1.2}
+.cf{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--td);margin-top:2px}
+.cb{padding:14px 16px}
+.chips{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.chip{padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10.5px;display:flex;align-items:center;gap:4px}
+.chip.y{background:rgba(212,168,0,.13);color:var(--y)}.chip.g{background:rgba(61,184,40,.13);color:var(--g)}
+.cdesc{font-size:11.5px;color:var(--tm);line-height:1.62;margin-bottom:12px}
+.bpt{font-family:'DM Mono',monospace;font-size:8.5px;text-transform:uppercase;letter-spacing:.15em;color:var(--td);margin-bottom:6px}
+.bptbl{width:100%;border-collapse:collapse}
+.bptbl th{font-family:'DM Mono',monospace;font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--td);padding:3px 7px;border-bottom:1px solid var(--br2);text-align:left;font-weight:400}
+.bptbl td{font-family:'DM Mono',monospace;font-size:10.5px;padding:4px 7px;border-bottom:1px solid var(--br2)}
+.bptbl tr:last-child td{border-bottom:none}
+.bhi{color:var(--bl);font-weight:500}
+.pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--br2)}
+.pr:last-child{border-bottom:none}
+.prk{font-family:'DM Mono',monospace;font-size:9px;color:var(--td);text-transform:uppercase;letter-spacing:.04em}
+.prv{font-family:'DM Mono',monospace;font-size:10px;color:var(--tx)}
+.nbox{background:rgba(58,143,208,.07);border:1px solid rgba(58,143,208,.2);border-radius:10px;padding:16px 20px;margin-bottom:22px;font-size:12px;color:var(--tm);line-height:1.7}
+.nbox b{color:var(--bl);font-family:'DM Mono',monospace}
+.igrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px;margin-top:26px}
+.ic{background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:16px;position:relative;overflow:hidden}
+.ic::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ic.y::before{background:var(--y)}.ic.g::before{background:var(--g)}.ic.b::before{background:var(--bl)}
+.iv{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:4px}
+.iv.y{color:var(--y)}.iv.g{color:var(--g)}.iv.b{color:var(--bl)}
+.il{font-size:11px;color:var(--tm);font-family:'DM Mono',monospace;line-height:1.45}
+footer{text-align:center;margin-top:60px;padding-top:24px;border-top:1px solid var(--br);font-size:10px;color:var(--td);font-family:'DM Mono',monospace;letter-spacing:.05em;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="over">Analisi Gascromatografica · GC/MS · Oli Essenziali Agrumari</p>
+  <h1><span class="ty">Limone</span> <span class="tv">vs</span> <span class="tg">Limetta</span></h1>
+  <p class="sub">Citrus limon &nbsp;·&nbsp; Citrus aurantifolia</p>
+  <p class="hdesc">Profili volatili GC/MS con punti di ebollizione sotto vuoto (3–4 mbar) e finestre di separazione per distillazione frazionata molecolare.</p>
+</header>
+
+<div class="leg">
+  <div class="leg-i"><div class="leg-p" style="background:var(--y)"></div>Limone (C. limon)</div>
+  <div class="leg-i"><div class="leg-p" style="background:var(--g)"></div>Limetta (C. aurantifolia)</div>
+  <div class="leg-i"><div class="leg-p" style="background:var(--bl)"></div>Comune a entrambe</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GRAFICO 1 — BARRE ORIZZONTALI
+════════════════════════════════════════════ -->
+<div class="card">
+  <div class="sec">Grafico 01 — Composizione % GC/MS</div>
+  <p class="ct">Concentrazioni relative dei composti principali</p>
+  <p class="cd">Percentuali medie da spremitura a freddo (cold-press) della scorza fresca. Scala 0–65%. Giallo = Limone, Verde = Limetta.</p>
+
+  <!-- SVG statico barre orizzontali -->
+  <!-- width totale 980, margin-left 200 per etichette, area barre 720, maxVal 65% -->
+  <svg viewBox="0 0 980 560" width="100%" style="display:block">
+    <defs>
+      <linearGradient id="gy" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8A6200"/><stop offset="100%" stop-color="#D4A800"/></linearGradient>
+      <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#1E6010"/><stop offset="100%" stop-color="#3DB828"/></linearGradient>
+    </defs>
+
+    <!-- axis labels -->
+    <text x="210" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">0%</text>
+    <text x="320" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">10%</text>
+    <text x="431" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">20%</text>
+    <text x="541" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">30%</text>
+    <text x="651" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">40%</text>
+    <text x="762" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">50%</text>
+    <text x="872" y="20" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="middle">60%</text>
+
+    <!-- grid lines -->
+    <line x1="210" y1="26" x2="210" y2="545" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="320" y1="26" x2="320" y2="545" stroke="#101828" stroke-width="0.5"/>
+    <line x1="431" y1="26" x2="431" y2="545" stroke="#101828" stroke-width="0.5"/>
+    <line x1="541" y1="26" x2="541" y2="545" stroke="#101828" stroke-width="0.5"/>
+    <line x1="651" y1="26" x2="651" y2="545" stroke="#101828" stroke-width="0.5"/>
+    <line x1="762" y1="26" x2="762" y2="545" stroke="#101828" stroke-width="0.5"/>
+    <line x1="872" y1="26" x2="872" y2="545" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- scale: 1% = 11.077px, origin x=210 -->
+    <!-- ── Limonene ── -->
+    <text x="200" y="60" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">Limonene</text>
+    <text x="200" y="76" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₆</text>
+    <rect x="210" y="50" width="672" height="14" rx="3" fill="url(#gy)"/><!-- 60.7% → 672px -->
+    <text x="888" y="57" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">60.7%</text>
+    <rect x="210" y="66" width="470" height="14" rx="3" fill="url(#gg)"/><!-- 42.4% → 470px -->
+    <text x="686" y="73" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">42.4%</text>
+    <line x1="0" y1="90" x2="980" y2="90" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── β-Pinene ── -->
+    <text x="200" y="114" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">β-Pinene</text>
+    <text x="200" y="130" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₆</text>
+    <rect x="210" y="103" width="140" height="14" rx="3" fill="url(#gy)"/><!-- 12.6% → 140px -->
+    <text x="356" y="110" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">12.6%</text>
+    <rect x="210" y="119" width="155" height="14" rx="3" fill="url(#gg)"/><!-- 14.0% → 155px -->
+    <text x="371" y="126" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">14.0%</text>
+    <line x1="0" y1="143" x2="980" y2="143" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── γ-Terpinene ── -->
+    <text x="200" y="167" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">γ-Terpinene</text>
+    <text x="200" y="183" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₆</text>
+    <rect x="210" y="157" width="114" height="14" rx="3" fill="url(#gy)"/><!-- 10.3% -->
+    <text x="330" y="164" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">10.3%</text>
+    <rect x="210" y="173" width="171" height="14" rx="3" fill="url(#gg)"/><!-- 15.4% -->
+    <text x="387" y="180" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">15.4%</text>
+    <line x1="0" y1="196" x2="980" y2="196" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── Citrale ── -->
+    <text x="200" y="220" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">Citrale</text>
+    <text x="200" y="236" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">(G+N) C₁₀H₁₆O</text>
+    <rect x="210" y="210" width="144" height="14" rx="3" fill="url(#gy)"/><!-- 13.0% -->
+    <text x="360" y="217" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">13.0%</text>
+    <rect x="210" y="226" width="61" height="14" rx="3" fill="url(#gg)"/><!-- 5.5% -->
+    <text x="277" y="233" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">5.5%</text>
+    <line x1="0" y1="249" x2="980" y2="249" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── α-Pinene ── -->
+    <text x="200" y="273" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">α-Pinene</text>
+    <text x="200" y="289" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₆</text>
+    <rect x="210" y="263" width="29" height="14" rx="3" fill="url(#gy)"/><!-- 2.6% -->
+    <text x="245" y="270" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">2.6%</text>
+    <rect x="210" y="279" width="34" height="14" rx="3" fill="url(#gg)"/><!-- 3.1% -->
+    <text x="250" y="286" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">3.1%</text>
+    <line x1="0" y1="302" x2="980" y2="302" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── α-Terpineolo ── -->
+    <text x="200" y="326" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">α-Terpineolo</text>
+    <text x="200" y="342" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₈O</text>
+    <rect x="210" y="316" width="22" height="14" rx="3" fill="url(#gy)"/><!-- 2.0% -->
+    <text x="238" y="323" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">2.0%</text>
+    <rect x="210" y="332" width="67" height="14" rx="3" fill="url(#gg)"/><!-- 6.0% -->
+    <text x="283" y="339" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">6.0%</text>
+    <line x1="0" y1="355" x2="980" y2="355" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── Linalolo ── -->
+    <text x="200" y="379" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">Linalolo</text>
+    <text x="200" y="395" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₈O</text>
+    <rect x="210" y="369" width="17" height="14" rx="3" fill="url(#gy)"/><!-- 1.5% -->
+    <text x="233" y="376" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">1.5%</text>
+    <rect x="210" y="385" width="9" height="14" rx="3" fill="url(#gg)"/><!-- 0.8% -->
+    <text x="225" y="392" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">0.8%</text>
+    <line x1="0" y1="408" x2="980" y2="408" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── Sabinene ── -->
+    <text x="200" y="432" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">Sabinene</text>
+    <text x="200" y="448" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₀H₁₆</text>
+    <rect x="210" y="422" width="27" height="14" rx="3" fill="url(#gy)"/><!-- 2.4% -->
+    <text x="243" y="429" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">2.4%</text>
+    <rect x="210" y="438" width="23" height="14" rx="3" fill="url(#gg)"/><!-- 2.1% -->
+    <text x="239" y="445" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">2.1%</text>
+    <line x1="0" y1="461" x2="980" y2="461" stroke="#101828" stroke-width="0.5"/>
+
+    <!-- ── Nerile acetato ── -->
+    <text x="200" y="485" font-family="DM Mono,monospace" font-size="12" fill="#D8E4F0" text-anchor="end" font-weight="500">Nerile acetato</text>
+    <text x="200" y="501" font-family="DM Mono,monospace" font-size="9" fill="#3A4E62" text-anchor="end">C₁₂H₂₀O₂</text>
+    <rect x="210" y="475" width="6" height="14" rx="3" fill="url(#gy)"/><!-- 0.5% -->
+    <text x="222" y="482" font-family="DM Mono,monospace" font-size="10" fill="#D4A800">0.5%</text>
+    <rect x="210" y="491" width="24" height="14" rx="3" fill="url(#gg)"/><!-- 2.2% -->
+    <text x="240" y="498" font-family="DM Mono,monospace" font-size="10" fill="#3DB828">2.2%</text>
+
+    <!-- legend badges -->
+    <rect x="210" y="535" width="14" height="7" rx="2" fill="url(#gy)"/>
+    <text x="230" y="539" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">Limone</text>
+    <rect x="300" y="535" width="14" height="7" rx="2" fill="url(#gg)"/>
+    <text x="320" y="539" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">Limetta</text>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GRAFICO 2 — BARRE IMPILATE COMPOSIZIONE
+════════════════════════════════════════════ -->
+<div class="card">
+  <div class="sec">Grafico 02 — Classi Chimiche</div>
+  <p class="ct">Ripartizione per famiglie strutturali</p>
+  <p class="cd">Proporzione delle macro-classi nei due oli essenziali. Il limone è dominato al 92% da idrocarburi monoterpenici; la limetta ha una composizione più variegata.</p>
+
+  <svg viewBox="0 0 900 200" width="100%" style="display:block">
+    <!-- LIMONE row y=40 -->
+    <text x="80" y="55" font-family="Playfair Display,serif" font-size="13" fill="#D8E4F0" text-anchor="end">🍋 Limone</text>
+    <!-- limonene 60.7% → 546px of 900 -->
+    <rect x="100" y="40" width="546" height="30" fill="#C49010" rx="0"/>
+    <text x="373" y="55" font-family="DM Mono,monospace" font-size="10" fill="rgba(0,0,0,0.8)">Limonene 60.7%</text>
+    <!-- β-Pinene 12.6% → 113px -->
+    <rect x="646" y="40" width="113" height="30" fill="#8A6000"/>
+    <text x="702" y="55" font-family="DM Mono,monospace" font-size="9" fill="rgba(0,0,0,0.8)">β-Pin 12.6%</text>
+    <!-- γ-Terp 10.3% → 93px -->
+    <rect x="759" y="40" width="93" height="30" fill="#AA8000"/>
+    <text x="805" y="55" font-family="DM Mono,monospace" font-size="9" fill="rgba(0,0,0,0.8)">γ-T 10.3</text>
+    <!-- Citrale 5.5% → 49px -->
+    <rect x="852" y="40" width="49" height="30" fill="#E8D870"/>
+    <!-- Ossigenati residui 3.9% skipped - too small -->
+
+    <!-- LIMETTA row y=110 -->
+    <text x="80" y="127" font-family="Playfair Display,serif" font-size="13" fill="#D8E4F0" text-anchor="end">🟢 Limetta</text>
+    <!-- limonene 42.4% → 382px -->
+    <rect x="100" y="112" width="382" height="30" fill="#2E8010" rx="0"/>
+    <text x="291" y="127" font-family="DM Mono,monospace" font-size="10" fill="rgba(0,0,0,0.8)">Limonene 42.4%</text>
+    <!-- γ-Terp 15.4% → 139px -->
+    <rect x="482" y="112" width="139" height="30" fill="#1E5808"/>
+    <text x="551" y="127" font-family="DM Mono,monospace" font-size="10" fill="rgba(0,0,0,0.8)">γ-T 15.4%</text>
+    <!-- β-Pinene 14.0% → 126px -->
+    <rect x="621" y="112" width="126" height="30" fill="#3EA018"/>
+    <text x="684" y="127" font-family="DM Mono,monospace" font-size="9" fill="rgba(0,0,0,0.8)">β-P 14%</text>
+    <!-- Sesquiterp 6.5% → 58px -->
+    <rect x="747" y="112" width="59" height="30" fill="#123C04"/>
+    <text x="776" y="127" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.7)">Sesq</text>
+    <!-- α-Terpineolo 6.0% → 54px -->
+    <rect x="806" y="112" width="54" height="30" fill="#80D050"/>
+    <!-- Citrale 5.5% → 49px -->
+    <rect x="860" y="112" width="40" height="30" fill="#A8E870"/>
+
+    <!-- legend -->
+    <rect x="100" y="175" width="10" height="10" fill="#C49010" rx="1"/>
+    <text x="116" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">Limonene</text>
+    <rect x="190" y="175" width="10" height="10" fill="#8A6000" rx="1"/>
+    <text x="206" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">β-Pinene</text>
+    <rect x="270" y="175" width="10" height="10" fill="#AA8000" rx="1"/>
+    <text x="286" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">γ-Terpinene</text>
+    <rect x="370" y="175" width="10" height="10" fill="#E8D870" rx="1"/>
+    <text x="386" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">Citrale</text>
+    <rect x="430" y="175" width="10" height="10" fill="#123C04" rx="1"/>
+    <text x="446" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">Sesquiterp.</text>
+    <rect x="530" y="175" width="10" height="10" fill="#80D050" rx="1"/>
+    <text x="546" y="182" font-family="DM Mono,monospace" font-size="9" fill="#6A7E94">α-Terpineolo</text>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GRAFICO 3 — RADAR
+════════════════════════════════════════════ -->
+<div class="card">
+  <div class="sec">Grafico 03 — Radar Terpenico</div>
+  <p class="ct">Sovrapposizione dei profili chiave</p>
+  <p class="cd">Visualizzazione polare di 6 composti diagnostici. L'area gialla evidenzia il maggiore contenuto di citrale nel limone; la verde il maggiore γ-terpinene, α-terpineolo e sesquiterpeni nella limetta.</p>
+
+  <!-- Radar cx=300,cy=220,r=160, 6 axes, maxVal=65 -->
+  <svg viewBox="0 0 900 450" width="100%" style="display:block">
+    <!-- grid pentagons at 20,40,60% scaled to r=160, max=65 -->
+    <!-- r20 = 160*20/65=49.2, r40=98.5, r60=147.7 -->
+    <!-- axes angles (starting top, CW): 0=-90°,1=-30°,2=30°,3=90°,4=150°,5=210° -->
+    <!-- cos/sin: ax0=(0,-1) ax1=(0.866,-0.5) ax2=(0.866,0.5) ax3=(0,-1→0,1) ax4=(-0.866,0.5) ax5=(-0.866,-0.5) -->
+    <!-- cx=300,cy=220 -->
+
+    <!-- grid rings -->
+    <polygon points="300,170.8 342.6,195.4 342.6,244.6 300,269.2 257.4,244.6 257.4,195.4" fill="none" stroke="#1E2C3C" stroke-width="1"/><!-- r20/65*160=49 -->
+    <polygon points="300,121.5 385.2,170.8 385.2,269.2 300,318.5 214.8,269.2 214.8,170.8" fill="none" stroke="#1E2C3C" stroke-width="1"/><!-- r40 -->
+    <polygon points="300,72.3 427.7,146.2 427.7,293.8 300,367.7 172.3,293.8 172.3,146.2" fill="none" stroke="#1E2C3C" stroke-width="1"/><!-- r60 -->
+
+    <!-- axes -->
+    <line x1="300" y1="220" x2="300" y2="60" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="300" y1="220" x2="439" y2="140" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="300" y1="220" x2="439" y2="300" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="300" y1="220" x2="300" y2="380" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="300" y1="220" x2="161" y2="300" stroke="#1E2C3C" stroke-width="1"/>
+    <line x1="300" y1="220" x2="161" y2="140" stroke="#1E2C3C" stroke-width="1"/>
+
+    <!-- axis labels -->
+    <text x="300" y="48" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="middle">Limonene</text>
+    <text x="460" y="132" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="start">β-Pinene</text>
+    <text x="460" y="308" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="start">γ-Terpinene</text>
+    <text x="300" y="400" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="middle">Citrale</text>
+    <text x="140" y="308" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="end">α-Terpineolo</text>
+    <text x="140" y="132" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94" text-anchor="end">Sesquiterp.</text>
+
+    <!-- % labels on grid -->
+    <text x="304" y="174" font-family="DM Mono,monospace" font-size="8" fill="#3A4E62">20%</text>
+    <text x="304" y="127" font-family="DM Mono,monospace" font-size="8" fill="#3A4E62">40%</text>
+    <text x="304" y="80" font-family="DM Mono,monospace" font-size="8" fill="#3A4E62">60%</text>
+
+    <!-- LIMONE polygon: values/65*160 from center 300,220 -->
+    <!-- Limonene=60.7: r=149.4, angle=-90: (300, 220-149.4)=(300,70.6) -->
+    <!-- β-Pinene=12.6: r=31.0, angle=-30: (300+31*0.866,220-31*0.5)=(326.8,204.5) -->
+    <!-- γ-Terpinene=10.3: r=25.3, angle=30: (300+25.3*0.866,220+25.3*0.5)=(321.9,232.7) -->
+    <!-- Citrale=13.0: r=32.0, angle=90: (300,220+32)=(300,252) -->
+    <!-- α-Terpineolo=2.0: r=4.9, angle=150: (300-4.9*0.866,220+4.9*0.5)=(295.8,222.5) -->
+    <!-- Sesquiterp=1.8: r=4.4, angle=210: (300-4.4*0.866,220-4.4*0.5)=(296.2,217.8) -->
+    <polygon points="300,70.6 326.8,204.5 321.9,232.7 300,252 295.8,222.5 296.2,217.8"
+             fill="#D4A800" fill-opacity="0.22" stroke="#D4A800" stroke-width="2"/>
+    <!-- dots lemon -->
+    <circle cx="300" cy="70.6" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="326.8" cy="204.5" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="321.9" cy="232.7" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="300" cy="252" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="295.8" cy="222.5" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="296.2" cy="217.8" r="4" fill="#D4A800" stroke="#080C12" stroke-width="1.5"/>
+
+    <!-- LIMETTA polygon: -->
+    <!-- Limonene=42.4: r=104.3→(300,115.7) -->
+    <!-- β-Pinene=14.0: r=34.5→(300+34.5*0.866,220-34.5*0.5)=(329.9,202.8) -->
+    <!-- γ-Terpinene=15.4: r=37.9→(300+37.9*0.866,220+37.9*0.5)=(332.8,238.95) -->
+    <!-- Citrale=5.5: r=13.5→(300,220+13.5)=(300,233.5) -->
+    <!-- α-Terpineolo=6.0: r=14.8→(300-14.8*0.866,220+14.8*0.5)=(287.2,227.4) -->
+    <!-- Sesquiterp=6.5: r=16.0→(300-16*0.866,220-16*0.5)=(286.1,212) -->
+    <polygon points="300,115.7 329.9,202.8 332.8,238.95 300,233.5 287.2,227.4 286.1,212"
+             fill="#3DB828" fill-opacity="0.22" stroke="#3DB828" stroke-width="2"/>
+    <!-- dots lime -->
+    <circle cx="300" cy="115.7" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="329.9" cy="202.8" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="332.8" cy="238.95" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="300" cy="233.5" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="287.2" cy="227.4" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+    <circle cx="286.1" cy="212" r="4" fill="#3DB828" stroke="#080C12" stroke-width="1.5"/>
+
+    <!-- LEGEND right side -->
+    <rect x="570" y="80" width="16" height="4" rx="2" fill="#D4A800"/>
+    <text x="593" y="84" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94">Limone (C. limon)</text>
+    <rect x="570" y="100" width="16" height="4" rx="2" fill="#3DB828"/>
+    <text x="593" y="104" font-family="DM Mono,monospace" font-size="11" fill="#6A7E94">Limetta (C. aurantifolia)</text>
+
+    <text x="570" y="136" font-family="DM Mono,monospace" font-size="10" fill="#3A4E62">Composto</text>
+    <text x="740" y="136" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">Lim.</text>
+    <text x="800" y="136" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">Limet.</text>
+    <line x1="570" y1="142" x2="850" y2="142" stroke="#1E2C3C" stroke-width="0.8"/>
+    <!-- rows -->
+    <text x="570" y="158" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">Limonene</text>
+    <text x="740" y="158" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">60.7%</text>
+    <text x="800" y="158" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">42.4%</text>
+    <text x="570" y="174" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">β-Pinene</text>
+    <text x="740" y="174" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">12.6%</text>
+    <text x="800" y="174" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">14.0%</text>
+    <text x="570" y="190" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">γ-Terpinene</text>
+    <text x="740" y="190" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">10.3%</text>
+    <text x="800" y="190" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">15.4%</text>
+    <text x="570" y="206" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">Citrale</text>
+    <text x="740" y="206" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">13.0%</text>
+    <text x="800" y="206" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">5.5%</text>
+    <text x="570" y="222" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">α-Terpineolo</text>
+    <text x="740" y="222" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">2.0%</text>
+    <text x="800" y="222" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">6.0%</text>
+    <text x="570" y="238" font-family="DM Mono,monospace" font-size="10" fill="#D8E4F0">Sesquiterpeni</text>
+    <text x="740" y="238" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="middle">1.8%</text>
+    <text x="800" y="238" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="middle">6.5%</text>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GRAFICO 4 — TIMELINE VUOTO 4 mbar
+════════════════════════════════════════════ -->
+<div class="card">
+  <div class="sec">Grafico 04 — Distillazione Frazionata a 4 mbar</div>
+  <p class="ct">Sequenza di eluzione e finestre di separazione sotto vuoto</p>
+  <p class="cd">Punti di ebollizione a 4 mbar (≈3 mmHg) calcolati con Clausius-Clapeyron. Le linee rosse indicano i tagli di frazionamento; i valori ΔT mostrano l'ampiezza della finestra di separazione.</p>
+
+  <div class="nbox"><b>⚗️ Nota:</b> Scala orizzontale: 30–95 °C. Ogni segmento colorato = un composto. Le frecce ΔT indicano la distanza termica tra composti adiacenti — critica per dimensionare la colonna di distillazione.</div>
+
+  <!-- timeline SVG: x-range 30..95°C, canvas 100..940px → 840px per 65°C → 12.923px/°C -->
+  <!-- y lemon=100, y lime=170 -->
+  <!--
+    Layout verticale (viewBox 960 × 360):
+      y=20–44   : ΔT labels sopra traccia Limone
+      y=44–68   : traccia Limone
+      y=68–92   : spazio
+      y=92–116  : traccia Limetta
+      y=116–140 : asse temperatura (ticks + numeri)
+      y=155     : titolo asse
+      y=170–186 : zone colorate (una sola riga, larghezze proporzionali)
+      y=187–203 : etichette zone (testo centrato sui box)
+  -->
+  <svg viewBox="0 0 960 178" width="100%" style="display:block">
+
+    <!-- ── Asse orizzontale ── -->
+    <!-- formula: x = 100 + (T-30)*12.923   [100..940 per 30..95°C] -->
+    <line x1="100" y1="116" x2="940" y2="116" stroke="#1E2C3C" stroke-width="1.5"/>
+    <!-- ticks + etichette -->
+    <line x1="100" y1="111" x2="100" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="100"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">30°C</text>
+    <line x1="165" y1="111" x2="165" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="165"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">35°C</text>
+    <line x1="229" y1="111" x2="229" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="229"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">40°C</text>
+    <line x1="294" y1="111" x2="294" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="294"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">45°C</text>
+    <line x1="359" y1="111" x2="359" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="359"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">50°C</text>
+    <line x1="423" y1="111" x2="423" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="423"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">55°C</text>
+    <line x1="488" y1="111" x2="488" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="488"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">60°C</text>
+    <line x1="553" y1="111" x2="553" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="553"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">65°C</text>
+    <line x1="617" y1="111" x2="617" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="617"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">70°C</text>
+    <line x1="682" y1="111" x2="682" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="682"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">75°C</text>
+    <line x1="746" y1="111" x2="746" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="746"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">80°C</text>
+    <line x1="811" y1="111" x2="811" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="811"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">85°C</text>
+    <line x1="876" y1="111" x2="876" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="876"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">90°C</text>
+    <line x1="940" y1="111" x2="940" y2="121" stroke="#3A4E62" stroke-width="1"/><text x="940"  y="132" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle">95°C</text>
+
+    <!-- Titolo asse -->
+    <text x="520" y="149" font-family="DM Mono,monospace" font-size="8.5" fill="#3A4E62" text-anchor="middle" letter-spacing="1.5">TEMPERATURA DI EBOLLIZIONE A 4 mbar (°C)</text>
+
+    <!-- ── Etichette righe ── -->
+    <text x="90" y="55" font-family="DM Mono,monospace" font-size="10" fill="#D4A800" text-anchor="end">Limone</text>
+    <text x="90" y="103" font-family="DM Mono,monospace" font-size="10" fill="#3DB828" text-anchor="end">Limetta</text>
+
+    <!-- ── Sfondi tracce ── -->
+    <rect x="100" y="44" width="840" height="22" rx="3" fill="#182030"/>
+    <rect x="100" y="92" width="840" height="22" rx="3" fill="#182030"/>
+
+    <!-- ── LIMONE track (y=44, h=22) ── -->
+    <!-- α-Pin @37 → x=190 --> <rect x="187" y="44" width="22" height="22" rx="2" fill="#4A6CAC"/><text x="198" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">α-P</text>
+    <!-- Sab @41 → x=239 -->   <rect x="239" y="44" width="22" height="22" rx="2" fill="#5A7CCC"/><text x="250" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Sab</text>
+    <!-- Myr @43 → x=265 -->   <rect x="265" y="44" width="22" height="22" rx="2" fill="#3A8CCC"/><text x="276" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Myr</text>
+    <!-- β-P @43 → x=278 -->   <rect x="278" y="44" width="22" height="22" rx="2" fill="#2A7AAA"/><text x="289" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">β-P</text>
+    <!-- Lim @47 → x=316 -->   <rect x="316" y="44" width="28" height="22" rx="2" fill="#C49010"/><text x="330" y="55" font-family="DM Mono,monospace" font-size="8" fill="black" text-anchor="middle">Lim</text>
+    <!-- γ-T @54 → x=407 -->   <rect x="407" y="44" width="24" height="22" rx="2" fill="#AA8000"/><text x="419" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="black" text-anchor="middle">γ-T</text>
+    <!-- Lin @61 → x=497 -->   <rect x="497" y="44" width="22" height="22" rx="2" fill="#9B7FD8"/><text x="508" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Lin</text>
+    <!-- α-T @69 → x=601 -->   <rect x="601" y="44" width="22" height="22" rx="2" fill="#C86DC0"/><text x="612" y="55" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">α-T</text>
+    <!-- Cit @72 → x=640 -->   <rect x="640" y="44" width="24" height="22" rx="2" fill="#D45A20"/><text x="652" y="55" font-family="DM Mono,monospace" font-size="8" fill="white" text-anchor="middle">Cit</text>
+    <!-- NAc @88 → x=846 -->   <rect x="846" y="44" width="14" height="22" rx="2" fill="#AA3080" opacity="0.5"/>
+
+    <!-- ── LIMETTA track (y=92, h=22) ── -->
+    <rect x="187" y="92" width="22" height="22" rx="2" fill="#4A6CAC"/><text x="198" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">α-P</text>
+    <rect x="239" y="92" width="22" height="22" rx="2" fill="#5A7CCC"/><text x="250" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Sab</text>
+    <rect x="265" y="92" width="22" height="22" rx="2" fill="#3A8CCC"/><text x="276" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Myr</text>
+    <rect x="278" y="92" width="22" height="22" rx="2" fill="#2A7AAA"/><text x="289" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">β-P</text>
+    <rect x="316" y="92" width="28" height="22" rx="2" fill="#3DB828"/><text x="330" y="103" font-family="DM Mono,monospace" font-size="8" fill="black" text-anchor="middle">Lim</text>
+    <rect x="407" y="92" width="24" height="22" rx="2" fill="#1E7010"/><text x="419" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">γ-T</text>
+    <rect x="497" y="92" width="22" height="22" rx="2" fill="#9B7FD8"/><text x="508" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">Lin</text>
+    <rect x="601" y="92" width="22" height="22" rx="2" fill="#C86DC0"/><text x="612" y="103" font-family="DM Mono,monospace" font-size="7.5" fill="white" text-anchor="middle">α-T</text>
+    <rect x="640" y="92" width="24" height="22" rx="2" fill="#D45A20"/><text x="652" y="103" font-family="DM Mono,monospace" font-size="8" fill="white" text-anchor="middle">Cit</text>
+    <rect x="846" y="92" width="18" height="22" rx="2" fill="#AA3080"/><text x="855" y="103" font-family="DM Mono,monospace" font-size="7" fill="white" text-anchor="middle">NAc</text>
+
+    <!-- ── ΔT annotations sopra traccia Limone ── -->
+    <line x1="215" y1="33" x2="215" y2="44" stroke="#555" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="215" y="29" font-family="DM Mono,monospace" font-size="8" fill="#3A8FD0" text-anchor="middle">Δ4°</text>
+    <line x1="261" y1="33" x2="261" y2="44" stroke="#555" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="261" y="29" font-family="DM Mono,monospace" font-size="8" fill="#D4A800" text-anchor="middle">Δ2°</text>
+    <line x1="300" y1="33" x2="300" y2="44" stroke="#3A8FD0" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="300" y="29" font-family="DM Mono,monospace" font-size="8" fill="#3A8FD0" text-anchor="middle">Δ4°</text>
+    <line x1="363" y1="33" x2="363" y2="44" stroke="#3DB828" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="363" y="29" font-family="DM Mono,monospace" font-size="9" fill="#3DB828" font-weight="600" text-anchor="middle">Δ7°</text>
+    <line x1="453" y1="33" x2="453" y2="44" stroke="#3DB828" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="453" y="29" font-family="DM Mono,monospace" font-size="9" fill="#3DB828" font-weight="600" text-anchor="middle">Δ7°</text>
+    <line x1="549" y1="33" x2="549" y2="44" stroke="#3DB828" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="549" y="29" font-family="DM Mono,monospace" font-size="9" fill="#3DB828" font-weight="600" text-anchor="middle">Δ8°</text>
+    <line x1="622" y1="33" x2="622" y2="44" stroke="#D45A20" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="622" y="29" font-family="DM Mono,monospace" font-size="8" fill="#D45A20" text-anchor="middle">Δ3°</text>
+    <line x1="745" y1="33" x2="745" y2="44" stroke="#3DB828" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <text x="745" y="29" font-family="DM Mono,monospace" font-size="9" fill="#3DB828" font-weight="600" text-anchor="middle">Δ16°</text>
+
+    <!-- ── ZONE: bande colorate sottili SOPRA le tracce (y=38..43), non toccano testo ── -->
+    <!-- Zona I: α-Pin(37)→β-Pin(43): x=187→300, h=5 -->
+    <rect x="187" y="38" width="113" height="5" rx="1" fill="rgba(58,143,208,0.35)"/>
+    <!-- Zona II: Lim(47): x=316→344, h=5 -->
+    <rect x="316" y="38" width="28" height="5" rx="1" fill="rgba(212,168,0,0.45)"/>
+    <!-- Zona III: γ-T(54): x=407→431, h=5 -->
+    <rect x="407" y="38" width="24" height="5" rx="1" fill="rgba(61,184,40,0.45)"/>
+    <!-- Zona IV: Lin(61)→Cit(72): x=497→664, h=5 -->
+    <rect x="497" y="38" width="167" height="5" rx="1" fill="rgba(155,127,216,0.35)"/>
+    <!-- Zona V: NAc(88): x=846→864, h=5 -->
+    <rect x="846" y="38" width="18" height="5" rx="1" fill="rgba(170,48,128,0.45)"/>
+
+  </svg>
+
+  <!-- Legenda zone: lista orizzontale semplice SOTTO l'SVG, nessuna sovrapposizione possibile -->
+  <div style="display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:14px;padding:12px 14px;background:var(--b3);border-radius:8px;border:1px solid var(--br)">
+    <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm)">
+      <span style="display:inline-block;width:26px;height:6px;border-radius:2px;background:rgba(58,143,208,0.6)"></span>
+      <span style="color:#3A8FD0;font-weight:600">I</span>&nbsp;Pineni · Sab · Mircene &nbsp;<span style="color:var(--td)">37–43°C</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm)">
+      <span style="display:inline-block;width:26px;height:6px;border-radius:2px;background:rgba(212,168,0,0.6)"></span>
+      <span style="color:#D4A800;font-weight:600">II</span>&nbsp;Limonene &nbsp;<span style="color:var(--td)">47°C</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm)">
+      <span style="display:inline-block;width:26px;height:6px;border-radius:2px;background:rgba(61,184,40,0.6)"></span>
+      <span style="color:#3DB828;font-weight:600">III</span>&nbsp;γ-Terpinene &nbsp;<span style="color:var(--td)">54°C</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm)">
+      <span style="display:inline-block;width:26px;height:6px;border-radius:2px;background:rgba(155,127,216,0.6)"></span>
+      <span style="color:#9B7FD8;font-weight:600">IV</span>&nbsp;Ossigenati (Lin · α-Ter · Citrale) &nbsp;<span style="color:var(--td)">61–72°C</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm)">
+      <span style="display:inline-block;width:26px;height:6px;border-radius:2px;background:rgba(170,48,128,0.6)"></span>
+      <span style="color:#AA3080;font-weight:600">V</span>&nbsp;Nerile acetato (estere) &nbsp;<span style="color:var(--td)">88°C</span>
+    </div>
+  </div>
+
+  <!-- Tabella finestre separazione -->
+  <table style="width:100%;border-collapse:collapse;margin-top:20px;font-family:'DM Mono',monospace;font-size:11.5px">
+    <thead>
+      <tr style="border-bottom:1px solid var(--br)">
+        <th style="text-align:left;padding:7px 10px;color:var(--td);font-weight:400;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em">Coppia (A → B)</th>
+        <th style="text-align:center;padding:7px 10px;color:var(--td);font-weight:400;font-size:9.5px;text-transform:uppercase">Eb. A °C</th>
+        <th style="text-align:center;padding:7px 10px;color:var(--td);font-weight:400;font-size:9.5px;text-transform:uppercase">Eb. B °C</th>
+        <th style="text-align:center;padding:7px 10px;color:var(--td);font-weight:400;font-size:9.5px;text-transform:uppercase">ΔT °C</th>
+        <th style="text-align:left;padding:7px 10px;color:var(--td);font-weight:400;font-size:9.5px;text-transform:uppercase">Valutazione separazione</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">α-Pinene → Sabinene</td><td style="text-align:center;border-bottom:1px solid var(--br2)">37</td><td style="text-align:center;border-bottom:1px solid var(--br2)">41</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#3A8FD0;font-weight:600">4</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🔵 Separabile con colonna efficiente</td></tr>
+      <tr><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">Sabinene → β-Mircene</td><td style="text-align:center;border-bottom:1px solid var(--br2)">41</td><td style="text-align:center;border-bottom:1px solid var(--br2)">43</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#D45A20;font-weight:600">2</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🔴 Finestra critica — quasi co-distillano</td></tr>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">β-Mircene → β-Pinene</td><td style="text-align:center;border-bottom:1px solid var(--br2)">43</td><td style="text-align:center;border-bottom:1px solid var(--br2)">43</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#D05030;font-weight:600">0</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🔴 Co-distillano — solo separazione cromatografica</td></tr>
+      <tr><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">β-Pinene → Limonene</td><td style="text-align:center;border-bottom:1px solid var(--br2)">43</td><td style="text-align:center;border-bottom:1px solid var(--br2)">47</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#3A8FD0;font-weight:600">4</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🔵 Purificazione limonene fattibile</td></tr>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">Limonene → γ-Terpinene</td><td style="text-align:center;border-bottom:1px solid var(--br2)">47</td><td style="text-align:center;border-bottom:1px solid var(--br2)">54</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#3DB828;font-weight:600">7</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🟢 Migliore finestra idrocarburi — diagnostica</td></tr>
+      <tr><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">γ-Terpinene → Linalolo</td><td style="text-align:center;border-bottom:1px solid var(--br2)">54</td><td style="text-align:center;border-bottom:1px solid var(--br2)">61</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#3DB828;font-weight:600">7</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🟢 Taglio idrocarburi/ossigenati — "terpeneless oil"</td></tr>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">Linalolo → α-Terpineolo</td><td style="text-align:center;border-bottom:1px solid var(--br2)">61</td><td style="text-align:center;border-bottom:1px solid var(--br2)">69</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#3DB828;font-weight:600">8</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🟢 Ottima separazione tra alcoli terpenici</td></tr>
+      <tr><td style="padding:6px 10px;border-bottom:1px solid var(--br2)">α-Terpineolo → Citrale</td><td style="text-align:center;border-bottom:1px solid var(--br2)">69</td><td style="text-align:center;border-bottom:1px solid var(--br2)">72</td><td style="text-align:center;border-bottom:1px solid var(--br2);color:#D4A800;font-weight:600">3</td><td style="border-bottom:1px solid var(--br2);color:var(--tm)">🟡 Critica — "high-citral lemon oil"</td></tr>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:6px 10px">Citrale → Nerile acetato</td><td style="text-align:center">72</td><td style="text-align:center">88</td><td style="text-align:center;color:#3DB828;font-weight:600">16</td><td style="color:var(--tm)">🟢 Ampia — acetati facilmente isolabili</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:12px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--tm)">
+    🟢 ΔT ≥ 7°C separazione agevole &nbsp;·&nbsp; 🔵 ΔT 4–6°C colonna efficiente &nbsp;·&nbsp; 🟡 ΔT 2–3°C critica &nbsp;·&nbsp; 🔴 ΔT 0–1°C co-distillano
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHEDE COMPOSTI
+════════════════════════════════════════════ -->
+<div class="card">
+  <div class="sec">Schede 05 — Dettaglio Composti</div>
+  <p class="ct">Proprietà chimiche, aromatiche e termodinamiche</p>
+  <p class="cd">Ogni scheda: formula, classe, % nelle due specie, descrizione funzionale, Eb. a 760 mmHg / 3 mbar / 4 mbar, ΔHvap e indice di ritenzione GC (DB-5).</p>
+  <div class="cgrid">
+
+    <!-- α-Pinene -->
+    <div class="cc" style="border-top:2px solid var(--bl)">
+      <div class="cc-top"><div class="cico b">🌲</div><div><div class="cfn">α-Pinene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico biciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 2.6%</div><div class="chip g"><span>●</span>Li: 3.1%</div></div>
+        <p class="cdesc">Il più volatile tra tutti i monoterpeni: Eb. 155 °C a 1 atm, 37 °C a 4 mbar. Odore pungente-resinoso di pino. Distilla per primo nel frazionamento sotto vuoto. Precursore biogenico di vitamina A. Broncodilatatore documentato.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>155 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">34 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">37 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">41.6 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">932</span></div>
+      </div>
+    </div>
+
+    <!-- Sabinene -->
+    <div class="cc" style="border-top:2px solid var(--bl)">
+      <div class="cc-top"><div class="cico b">🌿</div><div><div class="cfn">Sabinene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico biciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 2.4%</div><div class="chip g"><span>●</span>Li: 2.1%</div></div>
+        <p class="cdesc">Anello ciclopropilico caratteristico. Odore speziato-pepato. Precursore del terpinen-4-olo. Separa da α-pinene con ΔT=4°C a 4 mbar — finestra stretta ma operativa con colonna efficiente (>40 piatti teorici).</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>163 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">38 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">41 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">41.9 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">968</span></div>
+      </div>
+    </div>
+
+    <!-- β-Mircene -->
+    <div class="cc" style="border-top:2px solid var(--bl)">
+      <div class="cc-top"><div class="cico b">🌱</div><div><div class="cfn">β-Mircene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico aciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 1.8%</div><div class="chip g"><span>●</span>Li: 1.2%</div></div>
+        <p class="cdesc">3 insaturazioni, struttura aciclica. Odore erbaceo-metallico. Co-eluisce con β-pinene (ΔT≈0°C a 4 mbar): la separazione richiede colonna cromatografica a fase chirale o GC ad alta risoluzione. Proprietà analgesiche e sedative.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>167 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">40 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">43 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">42.5 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">990</span></div>
+      </div>
+    </div>
+
+    <!-- β-Pinene -->
+    <div class="cc" style="border-top:2px solid var(--bl)">
+      <div class="cc-top"><div class="cico b">🌲</div><div><div class="cfn">β-Pinene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico biciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 12.6%</div><div class="chip g"><span>●</span>Li: 14.0%</div></div>
+        <p class="cdesc">Secondo composto più abbondante in entrambi gli oli. Odore fresco-resinoso, note di pino e legno verde. Metilene esociclico reattivo. Si sovrappone a β-mircene (ΔT≈0°C): co-distillano praticamente in tutte le condizioni di vuoto.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>166 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">39 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">43 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">42.1 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">974</span></div>
+      </div>
+    </div>
+
+    <!-- Limonene -->
+    <div class="cc" style="border-top:2px solid var(--y)">
+      <div class="cc-top"><div class="cico y">🍊</div><div><div class="cfn">D-Limonene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico ciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 60.7%</div><div class="chip g"><span>●</span>Li: 42.4%</div></div>
+        <p class="cdesc">Composto dominante di entrambe le specie. Aroma dolce-agrumato (enantiomero R). Separa da β-pinene con ΔT=4°C a 4 mbar — finestra sufficiente per produzione di limonene purificato (>95%). Stabile ma ossidabile in aria umida. GRAS.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>176 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">44 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">47 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">43.5 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1028</span></div>
+      </div>
+    </div>
+
+    <!-- γ-Terpinene -->
+    <div class="cc" style="border-top:2px solid var(--g)">
+      <div class="cc-top"><div class="cico g">🌿</div><div><div class="cfn">γ-Terpinene</div><div class="cf">C₁₀H₁₆ · MW 136.23 g/mol</div><div class="cf">Idrocarburo monoterpenico ciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 10.3%</div><div class="chip g"><span>●</span>Li: 15.4%</div></div>
+        <p class="cdesc">Marcatore diagnostico primario: 15.4% nella limetta vs 10.3% nel limone. Il ΔT=7°C con limonene a 4 mbar è la finestra di separazione più ampia tra due idrocarburi adiacenti — punto di taglio ideale per il frazionamento. Forte antiossidante.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>183 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">51 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">54 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">44.2 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1056</span></div>
+      </div>
+    </div>
+
+    <!-- Linalolo -->
+    <div class="cc" style="border-top:2px solid var(--pp)">
+      <div class="cc-top"><div class="cico b">🌸</div><div><div class="cfn">Linalolo</div><div class="cf">C₁₀H₁₈O · MW 154.25 g/mol</div><div class="cf">Alcol monoterpenico aciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 1.5%</div><div class="chip g"><span>●</span>Li: 0.8%</div></div>
+        <p class="cdesc">Primo ossigenato nella sequenza di distillazione. La transizione γ-terpinene→linalolo (ΔT=7°C a 4 mbar) definisce il "taglio terpeneless": tutto ciò che distilla dopo questo punto è la frazione ossigenata aromaticamente più pregiata.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>198 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">57 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">61 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">48.7 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1097</span></div>
+      </div>
+    </div>
+
+    <!-- α-Terpineolo -->
+    <div class="cc" style="border-top:2px solid var(--g)">
+      <div class="cc-top"><div class="cico g">🌺</div><div><div class="cfn">α-Terpineolo</div><div class="cf">C₁₀H₁₈O · MW 154.25 g/mol</div><div class="cf">Alcol monoterpenico ciclico</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 2.0%</div><div class="chip g"><span>●</span>Li: 6.0%</div></div>
+        <p class="cdesc">Secondo marcatore diagnostico: 6.0% nella limetta vs 2.0% nel limone. Odore floreale-lillà con note di pesca. Separa da linalolo con ΔT=8°C a 4 mbar — la finestra più ampia nell'intera regione degli ossigenati. Carrier dermico in cosmetica.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>218 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">65 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">69 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">50.8 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1189</span></div>
+      </div>
+    </div>
+
+    <!-- Citrale -->
+    <div class="cc" style="border-top:2px solid var(--y)">
+      <div class="cc-top"><div class="cico y">💛</div><div><div class="cfn">Citrale (Geraniale+Nerale)</div><div class="cf">C₁₀H₁₆O · MW 152.23 g/mol</div><div class="cf">Aldeide monoterpenica aciclica</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 13.0%</div><div class="chip g"><span>●</span>Li: 5.5%</div></div>
+        <p class="cdesc">IL marcatore olfattivo del limone: 13% vs 5.5% nella limetta (miscela E/Z ≈60:40). Il ΔT=3°C con α-terpineolo a 4 mbar è la finestra più critica — richiede colonna a >60 piatti teorici per produrre "high-citral lemon oil". Antimicrobico, anti-adipogenico.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>229 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">68 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">72 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">52.1 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1267 (G) / 1238 (N)</span></div>
+      </div>
+    </div>
+
+    <!-- Nerile acetato -->
+    <div class="cc" style="border-top:2px solid var(--g)">
+      <div class="cc-top"><div class="cico g">🌼</div><div><div class="cfn">Nerile acetato</div><div class="cf">C₁₂H₂₀O₂ · MW 196.29 g/mol</div><div class="cf">Estere terpenico (acetato)</div></div></div>
+      <div class="cb">
+        <div class="chips"><div class="chip y"><span>●</span>L: 0.5%</div><div class="chip g"><span>●</span>Li: 2.2%</div></div>
+        <p class="cdesc">Più rappresentato nella limetta (2.2%). Odore dolce-floreale di rosa e pera. Con ΔT=16°C rispetto al citrale a 4 mbar è la finestra più ampia di tutto il profilo — gli acetati terpenici si isolano con facilità nella coda del frazionamento.</p>
+        <div class="bpt">Punti di ebollizione</div>
+        <table class="bptbl"><thead><tr><th>Pressione</th><th>Eb.</th></tr></thead><tbody>
+          <tr><td>760 mmHg (1 atm)</td><td>256 °C</td></tr>
+          <tr><td>3 mbar (2.25 mmHg)</td><td class="bhi">84 °C</td></tr>
+          <tr><td>4 mbar (3.0 mmHg)</td><td class="bhi">88 °C</td></tr>
+        </tbody></table>
+        <div class="pr"><span class="prk">ΔHvap</span><span class="prv">57.3 kJ/mol</span></div>
+        <div class="pr"><span class="prk">IR GC (DB-5)</span><span class="prv">1363</span></div>
+      </div>
+    </div>
+
+  </div><!-- /cgrid -->
+</div>
+
+<!-- INSIGHTS -->
+<div class="sec" style="margin-top:32px">Riepilogo — Dati Chiave</div>
+<div class="igrid">
+  <div class="ic y"><div class="iv y">~62%</div><div class="il">Limonene nel limone — composto dominante assoluto</div></div>
+  <div class="ic g"><div class="iv g">~42%</div><div class="il">Limonene nella limetta — profilo più variegato</div></div>
+  <div class="ic y"><div class="iv y">13%</div><div class="il">Citrale nel limone — marcatore olfattivo primario</div></div>
+  <div class="ic g"><div class="iv g">15.4%</div><div class="il">γ-Terpinene nella limetta — secondo marcatore diagnostico</div></div>
+  <div class="ic b"><div class="iv b">47°C</div><div class="il">Eb. limonene a 4 mbar — prima grande frazione</div></div>
+  <div class="ic b"><div class="iv b">ΔT 8°C</div><div class="il">Linalolo→α-Terpineolo: finestra più ampia negli ossigenati</div></div>
+</div>
+
+<footer>
+  Fonti: Clará et al., J. Chem. Eng. Data 2009 · PMC/NCBI · NIST WebBook · US Patent 3,347,681<br>
+  Eb. ridotte calcolate via Clausius-Clapeyron con ΔHvap sperimentali · Incertezza ±2°C
+</footer>
+</div>
+</body>
+</html>
